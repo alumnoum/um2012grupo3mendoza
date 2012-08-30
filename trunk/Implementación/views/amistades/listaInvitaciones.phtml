@@ -1,0 +1,32 @@
+<h2><?php echo $this->titulo; ?></h2>
+<?php include ROOT . DS . "views" . DS . "amistades" . DS . "menu.phtml"; ?>
+
+
+<table width="95%" border="1">
+<tr><td>
+<form  name="form1" method="post" action="<?php echo BASE_URL;?>amistades/invitar/">
+<input type="text" name="query" /> 
+<input type="submit" name="button" id="button" value="Buscar" />
+</form>
+</td></tr>
+</table>
+<br>
+<?php if(count($this->_invitaciones)){ ?>
+<table width="95%">
+	<tr>
+		<th></th>
+		<th>Nombre</th>
+		<th>Apellido</th>
+		<th>Email</th>
+	</tr>
+
+	<?php foreach ($this->_invitaciones as $user){?>
+	<tr>
+		<td><a href="<?php echo BASE_URL . 'amistades/invitaciones/' .$user->id;?>/">Confirmar solicitud de amistad</a>
+		<td><?php echo $user->nombre;?></td>
+		<td><?php echo $user->apellido;?></td>
+		<td><?php echo $user->email;?></td>
+	</tr>
+	<?php }
+	}else echo "<h2>Introduce el nombre o email de tu amigo para buscarlo</h2>"; ?>
+</table>

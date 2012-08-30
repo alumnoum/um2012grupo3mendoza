@@ -1,0 +1,22 @@
+<h2><?php echo $this->titulo; ?></h2>
+<?php include ROOT . DS . "views" . DS . "amistades" . DS . "menu.phtml"; ?>
+
+<?php include ROOT . DS . "views" . DS . "amistades" . DS . "buscar.phtml"; ?><br>
+
+<?php if(count($this->_usuarios)){ ?>
+<table width="95%">
+	<tr>
+		<th>Nombre</th>
+		<th>Apellido</th>
+		<th>Email</th>
+	</tr>
+
+	<?php foreach ($this->_usuarios as $user){?>
+	<tr>
+		<td><?php echo $user->nombre;?></td>
+		<td><?php echo $user->apellido;?></td>
+		<td><?php echo $user->email;?></td>
+	</tr>
+	<?php }
+	}else echo "<h2>No se encuentra la cadena buscada</h2>"; ?>
+</table>

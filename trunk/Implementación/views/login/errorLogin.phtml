@@ -1,0 +1,26 @@
+<?php $errores = $this->errores; ?>
+<?php $usuario = $this->usuario; ?>
+<h2><?php echo $this->titulo; ?></h2>
+<form id="form1" name="form1" method="post" action="./validarDatos">
+<input type="hidden" name="guardar" value="1" />
+<table width="800" border="1">
+  <tr>
+    <td align="right">E-mail:</td>
+    <td>
+      <input type="text" name="email" value="<?php if(isset($usuario->email)) echo $usuario->email;?>"/>
+      <?php if(array_key_exists('email',$errores)) echo $errores['email'];?>
+   </td>
+  </tr>
+  <tr>
+    <td align="right">Contraseña:</td>
+    <td><input type="password" name="contrasena" value="<?php if(isset($usuario->contrasena)) echo $usuario->contrasena;?>" />
+    	<?php if(array_key_exists('contrasena',$errores)) echo $errores['contrasena'];?>
+    </td>
+  </tr>
+  <tr>
+    <td colspan="2" align="center">
+      <input type="submit" name="button" id="button" value="Acceder" />
+    </td>
+  </tr>
+</table>
+ </form>

@@ -1,0 +1,50 @@
+<h2><?php echo $this->titulo;?></h2>
+<?php include ROOT . DS . "views" . DS . "posts" . DS . "menu.phtml"; ?>
+
+
+<script type="text/javascript">
+	function confirma(){
+		if(confirm('Esta seguro que desea cancelar la aplicacion?'))
+			window.location = '<?php echo BASE_URL;?>posts/';
+	}
+</script>
+
+<form name="form1" id="frm" method="post" action="<?php echo BASE_URL;?>posts/nuevo/">
+<table width="800" border="1">
+  <tr>
+    <td colspan="2">Va a publicar el siguiente contenido:</td>
+  </tr>
+  <tr>
+    <td colspan="2">
+    
+    <textarea name="contenido" id="textarea" cols="90" rows="10"><?php if(isset($this->contenido))echo $this->contenido; ?></textarea>
+  </tr>
+  <tr>
+    <td style="text-align: center;"><label>
+      <input type="submit" name="button" id="button" value="PUBLICAR" class="button"/>
+    </label></td>
+    <td>Seleccione la visibilidad para esta publicacion:</td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td rowspan="2"><p>
+      <label>
+        <input type="radio" name="permisos" value="publica" id="permisos_0" />
+        Publica</label>
+       (Visible para amigos, amigos de amigos y desconocidos).<br />
+      <label>
+        <input type="radio" name="permisos" value="semi" id="permisos_1" />
+        Semi-publica</label>
+       (Visible para amigos y amigos de amigos).<br />
+      <label>
+        <input type="radio" name="permisos" value="privada" id="permisos_2" />
+        Privada</label>
+       (Visible solo para amigos).<br />
+    </p></td>
+  </tr>
+  <tr>
+    <td style="text-align: center;">
+<input type="button" class="button" name="Cancel" value="Cancel" onclick="javascript:confirma();" />    </td>
+  </tr>
+</table>
+</form>

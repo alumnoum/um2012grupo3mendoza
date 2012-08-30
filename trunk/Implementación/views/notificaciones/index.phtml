@@ -1,0 +1,44 @@
+<h2><?php echo $this->titulo; ?> </h2>
+
+<form name="form1" method="post" action="<?echo BASE_URL;?>notificaciones/guardar/">
+<table width="600" border="1" cellspacing="20">
+  <tr>
+    <td colspan="2"><a href="<?php echo BASE_URL;?>config/">Configuracion</a> >> Administrar notificaciones</td>
+  </tr>
+  <tr>
+    <td colspan="2"><p>Seleccione en que caso desea recibir notificaciones:</p>
+        <label></label><p><label>
+<?php   $post = '';$etiqueta = '';$mensaje = '';
+		if(isset($this->_notificaciones->post))
+        	if($this->_notificaciones->post) $post = 'checked = "checked"'; 
+		if(isset($this->_notificaciones->mensaje))
+        	if($this->_notificaciones->mensaje)	$mensaje = 'checked = "checked"';
+        if(isset($this->_notificaciones->etiqueta))
+			if($this->_notificaciones->etiqueta)	$etiqueta = 'checked = "checked"'; 
+
+        //echo $this->notificaciones->post;
+
+?>
+        <input name="post" type="checkbox" <?php echo $post;?> />
+          </label>
+Cuando alguien publique algo en mi muro </p>
+        <p>
+          <label>
+          <input name="mensaje" type="checkbox" <?php echo $mensaje;?> />
+          </label>
+Cuando alguien me envie un mensaje</p>
+        <p>
+          <label>
+          <input name="etiqueta" type="checkbox" <?php echo $etiqueta;?> />
+          </label>
+Cuando alguien me etiquete en una foto</p>
+           <p>&nbsp;</p></td>
+  </tr>
+  <tr>
+    <td><label>
+      <input type="submit" name="button" id="button" value="Cancelar"  class="button"/>
+    </label></td>
+    <td><input type="submit" name="button2" id="button2" value="Guardar cambios" class="button"/></td>
+  </tr>
+</table>
+</form> 

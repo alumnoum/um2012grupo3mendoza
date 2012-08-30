@@ -1,0 +1,54 @@
+<?php $errores = $this->errores; ?>
+<?php $usuario = $this->usuario; ?>
+<h2><?php echo $this->titulo; ?></h2>
+<form id="form1" name="form1" method="post" action="">
+<input type="hidden" name="guardar" id="hiddenField" value="1" />
+<table width="800" border="0" align="center">
+  <tr>
+    <td align="right">Nombre:</td>
+    <td>
+      <input type="text" name="nombre" value="<?php if(isset($usuario->nombre)) echo $usuario->nombre;?>"/>
+      <?php if(array_key_exists('nombre',$errores)) echo $errores['nombre'];?>
+   </td>
+    </tr>
+  <tr>
+    <td align="right">Apellidos:</td>
+    <td><input type="text" name="apellidos" value="<?php if(isset($usuario->apellido)) echo $usuario->apellido;?>" /></td>
+    </tr>
+  <tr>
+    <td align="right">Dirección:</td>
+    <td><input type="text" name="direccion" value="<?php if(isset($usuario->direccion)) echo $usuario->direccion;?>"/></td>
+    </tr>
+  <tr>
+    <td align="right">Email:</td>
+    <td>
+    <input type="text" name="email" value="<?php if(isset($usuario->email)) echo $usuario->email;?>" />
+    <?php if(array_key_exists('email',$errores)) echo $errores['email']; ?>
+    </td>
+    </tr>
+  <tr>
+    <td align="right">Teléfono:</td>
+    <td><input type="text" name="telefono" value="<?php if(isset($usuario->telefono)) echo $usuario->telefono;?>" /></td>
+    </tr>
+  <tr>
+    <td align="right">Ciudad:</td>
+    <td><input type="text" name="ciudad" value="<?php if(isset($usuario->ciudad)) echo $usuario->ciudad;?>" /></td>
+    </tr>
+  <tr>
+    <td align="right">Pais:</td>
+    <td><input type="text" name="pais" value="<?php if(isset($usuario->pais)) echo $usuario->pais;?>" /></td>
+    </tr>
+  <tr>
+    <td align="right">Contraseña:</td>
+    <td><input type="password" name="contrasena" value="<?php if(isset($usuario->contrasena)) echo $usuario->contrasena;?>" />
+    	<?php if(array_key_exists('contrasena',$errores)) echo $errores['contrasena'];?>
+    </td>
+  </tr>
+  <tr>
+    <td align="right">&nbsp;</td>
+    <td>
+     <input type="submit" name="button" id="button" value="Registrar" />
+    </td>
+    </tr>
+</table>
+</form>
