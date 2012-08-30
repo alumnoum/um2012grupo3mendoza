@@ -1,0 +1,24 @@
+<h2><?php echo $this->titulo; ?></h2>
+<form id="form1" name="form1" method="post" action="./validarDatos">
+<input type="hidden" name="guardar" value="1" />
+<table width="800" border="1">
+  <tr>
+    <td align="right">Usuario:</td>
+    <td>
+        <input type="text" name="email" />
+        
+    </td>
+  </tr>
+  <tr>
+    <td align="right">Contrasena:</td>
+    <td>
+      <input type="password" name="contrasena"  />
+    </td>
+  </tr>
+  <tr>
+    <td colspan="2" align="center">
+      <input type="submit" name="button" id="button" value="Acceder" />
+    </td>
+  </tr>
+</table>
+ </form>
