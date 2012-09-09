@@ -1,6 +1,8 @@
 <h2><?php echo $this->titulo; ?></h2>
 <?php include ROOT . DS . "views" . DS . "amistades" . DS . "menu.phtml"; ?>
 
+<?php include ROOT . DS . "views" . DS . "amistades" . DS . "buscar.phtml"; ?><br>
+
 <?php if(count($this->amigos)){ ?>
 <table width="95%">
 	<tr>
@@ -11,10 +13,11 @@
 
 	<?php foreach ($this->amigos as $amigo){?>
 	<tr>
-		<td><a href="<?php echo BASE_URL . 'amistades/eliminar/' . $amigo['id'];?>">Eliminar</a>
-		<td><?php echo $amigo['nombre'];?></td>
-		<td><?php echo $amigo['email'];?></td>
+		<td><a href="<?php echo BASE_URL . 'amistades/eliminar/' . $amigo->id . '/';?>">Eliminar</a>
+		<td><?php echo $amigo->nombre;?></td>
+		<td><?php echo $amigo->email;?></td>
 	</tr>
 	<?php }
 	}else echo "<h2>No se encontraron amigos</h2>"; ?>
 </table>
+

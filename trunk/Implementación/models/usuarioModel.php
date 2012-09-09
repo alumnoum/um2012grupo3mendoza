@@ -23,7 +23,7 @@ class usuarioModel extends Model{
 	public function iniciarSesion(){
 		$usuarioDao = new usuarioDao();
 		$usuario = new usuarioModel();
-		if(! $usuario = $usuarioDao->checkLogin(new Datasource(), $this))
+		if(! $usuario = $usuarioDao->checkLogin($this))
 			return false;
 
 		
@@ -42,7 +42,7 @@ class usuarioModel extends Model{
 		
 		$usuarioDao = new usuarioDao();
 		
-		if(!$usuarioDao->create(new Datasource(), $this))
+		if(!$usuarioDao->create($this))
 				return false;
 		
 		

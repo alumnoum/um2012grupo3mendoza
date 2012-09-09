@@ -16,7 +16,7 @@ class invitacionModel extends Model{
 	{
 		$this->_invitacionDao = new invitacionDao();
 				
-		if($this->_invitacionDao->invitarAmigo(new Datasource(),$invitacion->idInvitado))
+		if($this->_invitacionDao->invitarAmigo($invitacion->idInvitado))
 			return true;		
 
 		return false;
@@ -27,7 +27,7 @@ class invitacionModel extends Model{
 		
 		$this->_invitacionDao = new invitacionDao();
 
-		$invitaciones = $this->_invitacionDao->muestraInvitaciones(new Datasource(),$invitacion->idMio);
+		$invitaciones = $this->_invitacionDao->muestraInvitaciones($invitacion->idMio);
 			return $invitaciones;
 		
 		return false;
@@ -37,7 +37,7 @@ class invitacionModel extends Model{
 
 		$this->_invitacionDao = new invitacionDao();
 			
-			if($this->_invitacionDao->aceptaInvitacion(new Datasource(), $invitacion))
+			if($this->_invitacionDao->aceptaInvitacion($invitacion))
 				return true;
 
 	return false;

@@ -2,13 +2,19 @@
 
 class invitacionDao{
 	
+	public $conn;
+	
+	public function __construct(){
+		$this->conn = new Datasource();
+	}
+	
 
-	function invitarAmigo($conn,$id){
+	function invitarAmigo($id){
 		 
 		$sql = "INSERT INTO  `facebook`.`invitaciones` (`invita` ,`invitado`)
 	    			VALUES ('".Session::get('id')."',  '$id')";
 			
-		$result = $this->databaseUpdate($conn, $sql);
+		$result = $this->databaseUpdate($sql);
 	
 		if ($result != 1)
 			return false;
@@ -17,14 +23,14 @@ class invitacionDao{
 	}
 	
 	
-	function muestraInvitaciones($conn,$id){
+	function muestraInvitaciones($id){
 		$sql = "SELECT id, nombre,apellido, email FROM usuarios, invitaciones where id=invita and invitado=$id";
 			
-		$result = $this->databaseUpdate($conn, $sql);
+		$result = $this->databaseUpdate($sql);
 		
 		$searchResults = array();
 		
-		while ($row = $conn->nextRow($result)) {
+		while ($row = $this->conn->nextRow($result)) {
 			 
 			$temp = new usuarioModel();
 			 
@@ -43,23 +49,23 @@ class invitacionDao{
 	}
 	
 	
-	function aceptaInvitacion($conn,$invitacion){
+	function aceptaInvitacion($invitacion){
 		
 		$sql = "DELETE FROM `invitaciones` WHERE `invita`='".$invitacion->idInvitado."' and  `invitado`='".$invitacion->idMio."'";
 
-		$result = $this->databaseUpdate($conn, $sql);
+		$result = $this->databaseUpdate($sql);
 				
 		$sql = "INSERT INTO `relaciones` set id='".$invitacion->idMio."' , idbis='".$invitacion->idInvitado."'";
 										
-		$result = $this->databaseUpdate($conn, $sql);
+		$result = $this->databaseUpdate($sql);
 
 		return true;
 		
 	}
 	
-	function databaseUpdate($conn, &$sql) {
+	function databaseUpdate(&$sql) {
 	
-		$result = $conn->execute($sql);
+		$result = $this->conn->execute($sql);
 	
 		return $result;
 	}

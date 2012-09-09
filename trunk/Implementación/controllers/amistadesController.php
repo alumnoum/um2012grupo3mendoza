@@ -54,7 +54,7 @@ class amistadesController extends Controller{
 			
 			if($_POST){ //Buscar a sus posibles amigos por nombre apellido o email
 				$this->_usuarioDao = new usuarioDao();
-				$usuarios = $this->_usuarioDao->busqueda(new Datasource(),$_POST['query']);
+				$usuarios = $this->_usuarioDao->busqueda($_POST['query']);
 				$this->_view->_usuarios = $usuarios;
 				$this->_view->titulo = "Resultado de la busqueda";
 				$this->_view->renderizar('listaInvitar','amistades');
@@ -82,28 +82,36 @@ class amistadesController extends Controller{
 	public function buscar(){
 		if($_POST){
 			$this->_usuarioDao = new usuarioDao();
-			$usuarios = $this->_usuarioDao->busqueda(new Datasource(),$_POST['query']);
+			$usuarios = $this->_usuarioDao->busqueda($_POST['query']);
 			$this->_view->_usuarios = $usuarios;
 			$this->_view->titulo = "Resultado de la busqueda";
 			$this->_view->renderizar('lista','amistades');
 			exit;
+		}
+		else{
+			$this->_usuarioDao = new usuarioDao();
+			$usuarios = $this->_usuarioDao->buscaAmigos(Session::get('id'));
+			$this->_view->_usuarios = $usuarios;
+			$this->_view->titulo = "Mis amigos";
+			$this->_view->renderizar('lista','amistades');
+			exit;			
 		}
 	}
 	
 	public function eliminar($id=false){
 		$this->_usuarioDao = new usuarioDao();
 			if(!$id){
-				if(!$amigos = $this->_usuarioDao->buscaAmigos(new Datasource(), Session::get('id'))){
+				if(!$amigos = $this->_usuarioDao->buscaAmigos(Session::get('id'))){
 					$this->_view->titulo = "No hay amigos que eliminar. Pruebe a buscar nuevos amigos.";
 					$this->_view->renderizar('estado','amistades');
 					exit;
 				}
-				$this->_view->titulo = "Amigos";
+				$this->_view->titulo = "Eliminar amigo";
 				$this->_view->amigos = $amigos;
 				$this->_view->renderizar('listaEliminar','amistades');
 				exit;
 			}
-			$this->_usuarioDao->eliminarAmigo(new Datasource(),$id);
+			$this->_usuarioDao->eliminarAmigo($id);
 			$this->redireccionar('amistades/eliminar/');
 		}
 	}

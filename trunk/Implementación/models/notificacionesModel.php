@@ -17,7 +17,7 @@ public function __construct(){
 		
 		$notificacionesDao = new notificacionesDao();
 		
-		if($notificacionesDao->guardar(new Datasource(), $notificaciones))
+		if($notificacionesDao->guardar($notificaciones))
 			return true;
 		
 		return false;
@@ -26,7 +26,7 @@ public function __construct(){
 	function traer(){
 	
 		$notificacionesDao = new notificacionesDao();
-		$notificaciones = $notificacionesDao->traer(new Datasource(), $this);
+		$notificaciones = $notificacionesDao->traer($this);
 		
 		if(!$notificaciones){ //Si nunca guardó la config devuelvo la que hay por defecto.
 			$this->post = 1; $this->mensaje = 1; $this->etiqueta = 1; 
