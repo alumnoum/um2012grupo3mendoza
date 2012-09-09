@@ -2,9 +2,14 @@
 
 class notificacionesDao{
 	
-
+	public $conn;
 	
-	function guardar($conn,$notificaciones,$default=false){
+	public function __construct(){
+		$this->conn = new Datasource();
+	}
+	
+	
+	function guardar($notificaciones,$default=false){
 		
 		
 		if($default)
@@ -16,19 +21,19 @@ class notificacionesDao{
 					WHERE usuario='".Session::get('id')."'";
 			
 		//echo $sql;exit;
-		$result = $this->databaseUpdate($conn, $sql);
+		$result = $this->databaseUpdate($sql);
 				
 		return true;
 		
 	}
 	
-	function traer($conn,$notificaciones){
+	function traer($notificaciones){
 	
 		$sql = "SELECT mensaje, post, etiqueta FROM  `notificaciones` WHERE usuario =".Session::get('id');
 	
-		$result = $this->databaseUpdate($conn, $sql);
+		$result = $this->databaseUpdate($sql);
 			
-		if($row = $conn->nextRow($result)){
+		if($row = $this->conn->nextRow($result)){
 			 
 			$notificaciones->etiqueta = $row[2];
 			$notificaciones->mensaje = $row[0];
@@ -43,9 +48,9 @@ class notificacionesDao{
 	
 	
 	
-	function databaseUpdate($conn, &$sql) {
+	function databaseUpdate(&$sql) {
 	
-		$result = $conn->execute($sql);
+		$result = $this->conn->execute($sql);
 	
 		return $result;
 	}

@@ -10,6 +10,14 @@ class usuarioDao {
      * NOTE: If you extend the valueObject class, make sure to override the
      * clone() method in it!
      */
+
+	public $conn;
+	
+	public function __construct(){
+		$this->conn = new Datasource();
+	}
+	
+	
     function createValueObject() {
           return new usuarioDao();
     }
@@ -21,11 +29,11 @@ class usuarioDao {
      * for the real load-method which accepts the valueObject as a parameter. Returned
      * valueObject will be created using the createValueObject() method.
      */
-    function getObject($conn, $id) {
+    function getObject($id) {
 
           $valueObject = $this->createValueObject();
           $valueObject->setId($id);
-          $this->load($conn, $valueObject);
+          $this->load($this->conn, $valueObject);
           return $valueObject;
     }
 
@@ -42,7 +50,7 @@ class usuarioDao {
      * @param valueObject  This parameter contains the class instance to be loaded.
      *                     Primary-key field must be set for this to work properly.
      */
-    function load($conn, &$valueObject) {
+    function load(&$valueObject) {
 
           if (!$valueObject->getId()) {
                //print "Can not select without Primary-Key!";
@@ -51,7 +59,7 @@ class usuarioDao {
 
           $sql = "SELECT * FROM usuarios WHERE (id = ".$valueObject->getId().") "; 
 
-          if ($this->singleQuery($conn, $sql, $valueObject))
+          if ($this->singleQuery($this->conn, $sql, $valueObject))
                return true;
           else
                return false;
@@ -67,18 +75,18 @@ class usuarioDao {
      *
      * @param conn         This method requires working database connection.
      */
-    function loadAll($conn) {
+    function loadAll() {
 
 
           $sql = "SELECT * FROM usuarios ORDER BY id ASC ";
 
-          $searchResults = $this->listQuery($conn, $sql);
+          $searchResults = $this->listQuery($sql);
 
           return $searchResults;
     }
     
     
-    function busqueda($conn,$query){
+    function busqueda($query){
     	$sql = "SELECT id, nombre, apellido, email FROM  `usuarios` 
     			WHERE  
     			`nombre` LIKE  '%".$query."%' OR  
@@ -89,9 +97,9 @@ class usuarioDao {
     		
     	$searchResults = array();
 
-    	$result = $conn->execute($sql);
+    	$result = $this->conn->execute($sql);
     		
-    	while ($row = $conn->nextRow($result)) {
+    	while ($row = $this->conn->nextRow($result)) {
     	
     		$temp = new usuarioModel();
     			
@@ -104,16 +112,17 @@ class usuarioDao {
     	}
     	return $searchResults;
     }
-    
-    function checkLogin($conn,$usuario) {
+      
+   
+    function checkLogin($usuario) {
     
     
     	$sql = "SELECT id, nombre, email FROM usuarios where email = '".$usuario->email."' and contrasena='".$usuario->contrasena."'";
     	
     	$searchResults = array();
-    	$result = $conn->execute($sql);
+    	$result = $this->conn->execute($sql);
     	
-    	if($row = $conn->nextRow($result)){
+    	if($row = $this->conn->nextRow($result)){
     		$usuario->id = $row[0];
     		$usuario->nombre = $row[1];
     		$usuario->email = $row[2];
@@ -123,17 +132,18 @@ class usuarioDao {
     	return false;
     }
 
-    function buscaAmigos($conn,$idUser) {
+    function buscaAmigos($idUser) {
     
     
     	$sql = "SELECT * FROM relaciones WHERE id='".$idUser."' OR idbis='".$idUser."'";
 
  
     	$amigos = array();
-
-    	$result = $conn->execute($sql);
+    	$searchResults = array();
     	
-    	while ($row = $conn->nextRow($result)) {
+    	$result = $this->conn->execute($sql);
+    	
+    	while ($row = $this->conn->nextRow($result)) {
     		 
     		$id = $row[0];
     		$idbis = $row[1];
@@ -147,22 +157,26 @@ class usuarioDao {
     	
     	$ids = implode(',', $amigos);
     	
-    	$sql = "SELECT id, nombre, email FROM usuarios WHERE id IN ($ids)";
+    	$sql = "SELECT id, nombre, apellido, email FROM usuarios WHERE id IN ($ids)";
 
     	if(strlen($ids)>0){
 
-    	$result = $conn->execute($sql);
+    	$result = $this->conn->execute($sql);
     	
 	    	$amigos=NULL;
 	    	$amigos = array();
 	    	
-	    	while ($row = $conn->nextRow($result)) {	 
-	    		$id = $row[0];
-	    		$nombre = $row[1];
-	    		$email = $row[2];
-	    		array_push($amigos, array('id' => $id, 'nombre' => $nombre, 'email' => $email));
+	    	while ($row = $this->conn->nextRow($result)) {	 
+	    		
+	    		$temp = new usuarioModel();
+	    		$temp->setid($row[0]);
+	    		$temp->setNombre($row[1]);
+	    		$temp->setApellido($row[2]);
+	    		$temp->setEmail($row[3]);
+
+	    		array_push($searchResults, $temp);
 	    	}
-	    	return $amigos;
+	    	return $searchResults;
     	}
     	
 	    return false;
@@ -181,7 +195,7 @@ class usuarioDao {
      *                     If automatic surrogate-keys are not used the Primary-key 
      *                     field must be set for this to work properly.
      */
-    function create($conn, &$valueObject) {
+    function create(&$valueObject) {
 
           $sql = "INSERT INTO usuarios (nombre, apellido, ";
           $sql = $sql."direccion, telefono, email, ";
@@ -194,7 +208,8 @@ class usuarioDao {
           $sql = $sql."'".$valueObject->getCiudad()."', ";
           $sql = $sql."'".$valueObject->getPais()."', ";
           $sql = $sql."'".$valueObject->getContrasena()."') ";
-          $result = $this->databaseUpdate($conn, $sql);
+          
+          $result = $this->databaseUpdate($sql);
 
           return true;
     }
@@ -211,7 +226,7 @@ class usuarioDao {
      * @param valueObject  This parameter contains the class instance to be saved.
      *                     Primary-key field must be set for this to work properly.
      */
-    function save($conn, &$valueObject) {
+    function save(&$valueObject) {
 
           $sql = "UPDATE usuarios SET nombre = '".$valueObject->getNombre()."', ";
           $sql = $sql."apellido = '".$valueObject->getApellido()."', ";
@@ -222,7 +237,7 @@ class usuarioDao {
           $sql = $sql."pais = '".$valueObject->getPais()."', ";
           $sql = $sql."contrasena = '".$valueObject->getContrasena()."'";
           $sql = $sql." WHERE (id = ".$valueObject->getId().") ";
-          $result = $this->databaseUpdate($conn, $sql);
+          $result = $this->databaseUpdate($sql);
 
           if ($result != 1) {
                //print "PrimaryKey Error when updating DB!";
@@ -245,7 +260,7 @@ class usuarioDao {
      * @param valueObject  This parameter contains the class instance to be deleted.
      *                     Primary-key field must be set for this to work properly.
      */
-    function delete($conn, &$valueObject) {
+    function delete(&$valueObject) {
 
 
           if (!$valueObject->getId()) {
@@ -254,7 +269,7 @@ class usuarioDao {
           }
 
           $sql = "DELETE FROM usuarios WHERE (id = ".$valueObject->getId().") ";
-          $result = $this->databaseUpdate($conn, $sql);
+          $result = $this->databaseUpdate($sql);
 
           if ($result != 1) {
                //print "PrimaryKey Error when updating DB!";
@@ -263,12 +278,12 @@ class usuarioDao {
           return true;
     }
 
-    function invitarAmigo($conn,$id){
+    function invitarAmigo($id){
     	
     	$sql = "INSERT INTO  `facebook`.`invitaciones` (`invita` ,`invitado`)	
     			VALUES ('".Session::get('id')."',  '$id')";
     					
-    	$result = $this->databaseUpdate($conn, $sql);
+    	$result = $this->databaseUpdate($sql);
     			 
     	if ($result != 1) 
     		return false;
@@ -276,13 +291,13 @@ class usuarioDao {
     	return true;    	
     }
     
-    function eliminarAmigo($conn, $idAmigo){
+    function eliminarAmigo($idAmigo){
     	
     	
     	$idUser = Session::get('id');
     	
     	$sql = "DELETE FROM relaciones WHERE (id='".$idUser."' AND idbis='".$idAmigo."') OR  (id='".$idAmigo."' AND idbis='".$idUser."')";
-    	$result = $this->databaseUpdate($conn, $sql);
+    	$result = $this->databaseUpdate($sql);
     	
     	if ($result != 1) {
     		return false;
@@ -302,10 +317,10 @@ class usuarioDao {
      *
      * @param conn         This method requires working database connection.
      */
-    function deleteAll($conn) {
+    function deleteAll() {
 
           $sql = "DELETE FROM usuarios";
-          $result = $this->databaseUpdate($conn, $sql);
+          $result = $this->databaseUpdate($sql);
 
           return true;
     }
@@ -319,14 +334,14 @@ class usuarioDao {
      *
      * @param conn         This method requires working database connection.
      */
-    function countAll($conn) {
+    function countAll() {
 
           $sql = "SELECT count(*) FROM usuarios";
           $allRows = 0;
 
-          $result = $conn->execute($sql);
+          $result = $this->conn->execute($sql);
 
-          if ($row = $conn->nextRow($result))
+          if ($row = $this->conn->nextRow($result))
                 $allRows = $row[0];
 
           return $allRows;
@@ -346,7 +361,7 @@ class usuarioDao {
      * @param valueObject  This parameter contains the class instance where search will be based.
      *                     Primary-key field should not be set.
      */
-    function searchMatching($conn, &$valueObject) {
+    function searchMatching(&$valueObject) {
 
           $first = true;
           $sql = "SELECT * FROM usuarios WHERE 1=1 ";
@@ -404,7 +419,7 @@ class usuarioDao {
           if ($first)
                return array();
 
-          $searchResults = $this->listQuery($conn, $sql);
+          $searchResults = $this->listQuery($sql);
 
           echo '<pre>';
           print_r($searchResults);
@@ -432,9 +447,9 @@ class usuarioDao {
      * @param conn         This method requires working database connection.
      * @param stmt         This parameter contains the SQL statement to be excuted.
      */
-    function databaseUpdate($conn, &$sql) {
-
-          $result = $conn->execute($sql);
+    function databaseUpdate($sql) {
+    	
+          $result = $this->conn->execute($sql);
 
           return $result;
     }
@@ -450,11 +465,11 @@ class usuarioDao {
      * @param stmt         This parameter contains the SQL statement to be excuted.
      * @param valueObject  Class-instance where resulting data will be stored.
      */
-    function singleQuery($conn, &$sql, &$valueObject) {
+    function singleQuery(&$sql, &$valueObject) {
 
-          $result = $conn->execute($sql);
+          $result = $this->conn->execute($sql);
 
-          if ($row = $conn->nextRow($result)) {
+          if ($row = $this->conn->nextRow($result)) {
 
                    $valueObject->setId($row[0]); 
                    $valueObject->setNombre($row[1]); 
@@ -481,12 +496,12 @@ class usuarioDao {
      * @param conn         This method requires working database connection.
      * @param stmt         This parameter contains the SQL statement to be excuted.
      */
-    function listQuery($conn, &$sql) {
+    function listQuery(&$sql) {
 
           $searchResults = array();
-          $result = $conn->execute($sql);
+          $result = $this->conn->execute($sql);
 
-          while ($row = $conn->nextRow($result)) {
+          while ($row = $this->conn->nextRow($result)) {
                $temp = $this->createValueObject();
 
                $temp->setNombre($row[0]); 
