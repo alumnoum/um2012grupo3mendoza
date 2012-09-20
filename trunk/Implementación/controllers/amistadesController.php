@@ -14,6 +14,8 @@ class amistadesController extends Controller{
 	}
 	
 	public function index(){
+		Session::getInstancia();
+		
 		$this->_view->titulo = "Gestionar amistades";
 		$this->_view->renderizar('index','amistades');
 	}
@@ -31,7 +33,6 @@ class amistadesController extends Controller{
 				exit;
 			}
 		}
-
 		//MUESTRA INVITACIONES		
 		$invitaciones = array();
 		$invitaciones = $this->_invitacion->muestraInvitaciones($this->_invitacion);
@@ -73,9 +74,11 @@ class amistadesController extends Controller{
 			if($this->_invitacion->invitarAmigo($this->_invitacion)){
 				$this->_view->titulo = "Se realizo la invitacion con exito.";
 				$this->_view->renderizar('estado','amistades');
+				exit;
 			}
 			$this->_view->titulo = "Hubo un problema, consulte al administrador.";
 			$this->_view->renderizar('estado','amistades');
+			exit;
 		}
 	}
 	

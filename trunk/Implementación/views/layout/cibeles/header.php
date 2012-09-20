@@ -6,7 +6,15 @@
         <title><?php if(isset($this->titulo)) echo $this->titulo; ?></title>
         <meta http-equiv="Content-Type" content="text/html; charset=utf8" />
         <link href="<?php echo $_layoutParams['ruta_css']; ?>estilos.css" rel="stylesheet" type="text/css" />
-    </head>
+        
+		<link href='<?php echo BASE_URL . '/public/css/googleFonts.css'; ?>' rel='stylesheet' type='text/css'>
+		<script type="text/javascript" src="<?php echo BASE_URL . '/public/js/jquery.js';?>"></script>
+		<script type="text/javascript" src="<?php echo BASE_URL . '/public/js/listadoFramework.js';?>"></script>
+		<!--[if lt IE 7]>
+		<link href="stylesheets/screen-ie6.css" type="text/css" rel="stylesheet" media="screen,projection" />
+		<![endif]-->
+        
+       </head>
 
     <body>
         <body>
