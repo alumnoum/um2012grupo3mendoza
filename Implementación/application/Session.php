@@ -1,10 +1,28 @@
 <?php
 class Session
 {
-	public static function init()
+	
+	static private $sesion = NULL;
+
+	
+	private static function init()
 	{
 		session_start();
 	}
+		
+	private function __construct() {}
+	
+
+	static public function getInstancia() {
+		
+		if (self::$sesion == NULL) {
+			self::$sesion = new Session();
+			self::$sesion->init();	
+		}
+		
+		return self::$sesion;
+	}
+	
 
 	public static function destroy($clave = false)
 	{

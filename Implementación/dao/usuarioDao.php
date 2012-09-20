@@ -37,44 +37,36 @@ class usuarioDao {
           return $valueObject;
     }
 
+    
+  
 
-    /**
-     * load-method. This will load valueObject contents from database using
-     * Primary-Key as identifier. Upper layer should use this so that valueObject
-     * instance is created and only primary-key should be specified. Then call
-     * this method to complete other persistent information. This method will
-     * overwrite all other fields except primary-key and possible runtime variables.
-     * If load can not find matching row, NotFoundException will be thrown.
-     *
-     * @param conn         This method requires working database connection.
-     * @param valueObject  This parameter contains the class instance to be loaded.
-     *                     Primary-key field must be set for this to work properly.
-     */
-    function load(&$valueObject) {
 
-          if (!$valueObject->getId()) {
-               //print "Can not select without Primary-Key!";
-               return false;
-          }
+    function load($id) {
 
-          $sql = "SELECT * FROM usuarios WHERE (id = ".$valueObject->getId().") "; 
+          $sql = "SELECT id, nombre, apellido, email, direccion, telefono, pais, ciudad, contrasena, imagen FROM usuarios WHERE (id = ".$id.") "; 
 
-          if ($this->singleQuery($this->conn, $sql, $valueObject))
-               return true;
-          else
-               return false;
+         
+    	  $result = $this->conn->execute($sql);
+    		
+    	while ($row = $this->conn->nextRow($result)) {
+    	
+    		$temp = new usuarioModel();
+    			
+    		$temp->setId($id);
+    		$temp->setNombre($row[1]);
+    		$temp->setApellido($row[2]);
+    		$temp->setEmail($row[3]);
+    		$temp->setDireccion($row[4]);
+    		$temp->setTelefono($row[5]);
+    		$temp->setPais($row[6]);
+    		$temp->setCiudad($row[7]);
+    		$temp->setContrasena($row[8]);
+    		$temp->setImagen($row[9]);
+    	}
+    	return $temp;
     }
 
 
-    /**
-     * LoadAll-method. This will read all contents from database table and
-     * build an Vector containing valueObjects. Please note, that this method
-     * will consume huge amounts of resources if table has lot's of rows. 
-     * This should only be used when target tables have only small amounts
-     * of data.
-     *
-     * @param conn         This method requires working database connection.
-     */
     function loadAll() {
 
 
@@ -247,7 +239,62 @@ class usuarioDao {
           return true;
     }
 
-
+    function savePerfil(&$valueObject) {
+    
+    	$sql = "UPDATE usuarios SET nombre = '".$valueObject->getNombre()."', ";
+    	$sql = $sql."apellido = '".$valueObject->getApellido()."', ";
+    	$sql = $sql."direccion = '".$valueObject->getDireccion()."', ";
+    	$sql = $sql."telefono = '".$valueObject->getTelefono()."', ";
+    	$sql = $sql."email = '".$valueObject->getEmail()."', ";
+    	$sql = $sql."ciudad = '".$valueObject->getCiudad()."', ";
+    	$sql = $sql."pais = '".$valueObject->getPais()."' ";
+    	$sql = $sql." WHERE (id = ".Session::get('id').") ";
+    	
+    
+    	//echo $sql; exit;
+    	$result = $this->databaseUpdate($sql);
+    
+    	if ($result != 1) {
+    		//print "PrimaryKey Error when updating DB!";
+    		return false;
+    	}
+    
+    	return true;
+    }
+    
+    
+    function setPass(&$valueObject) {
+    
+    	$sql = "UPDATE usuarios SET contrasena = '".$valueObject->getContrasena()."'  WHERE (id = ".Session::get('id').")";
+    	 
+    
+    	//echo $sql; exit;
+    	$result = $this->databaseUpdate($sql);
+    
+    	if ($result != 1) {
+    		//print "PrimaryKey Error when updating DB!";
+    		return false;
+    	}
+    
+    	return true;
+    }
+    
+    function setImagen(&$valueObject) {
+    
+    	$sql = "UPDATE usuarios SET imagen  = '".$valueObject->imagen."'  WHERE (id = ".Session::get('id').")";
+    
+    
+    	//echo $sql; exit;
+    	$result = $this->databaseUpdate($sql);
+    
+    	if ($result != 1) {
+    		//print "PrimaryKey Error when updating DB!";
+    		return false;
+    	}
+    
+    	return true;
+    }
+    
     /**
      * delete-method. This method will remove the information from database as identified by
      * by primary-key in supplied valueObject. Once valueObject has been deleted it can not 

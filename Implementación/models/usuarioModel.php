@@ -11,6 +11,7 @@ class usuarioModel extends Model{
 	public $ciudad;
 	public $pais;
 	public $contrasena;
+	public $imagen;
 	public $_notificaciones;
 		
 	public function __construct(){
@@ -21,6 +22,7 @@ class usuarioModel extends Model{
 	
 	
 	public function iniciarSesion(){
+		
 		$usuarioDao = new usuarioDao();
 		$usuario = new usuarioModel();
 		if(! $usuario = $usuarioDao->checkLogin($this))
@@ -32,6 +34,9 @@ class usuarioModel extends Model{
 		Session::set('id', $usuario->id);
 		Session::set('email', $usuario->email);		
 		return true;
+
+		
+		return false;
 	}
 	
 	public function cerrarSesion(){
@@ -142,6 +147,11 @@ class usuarioModel extends Model{
           $this->pais = $paisIn;
     }
 
+    function setImagen($imagen) {
+    	$this->imagen = $imagen;
+    }
+    
+    
     function getContrasena() {
           return $this->contrasena;
     }

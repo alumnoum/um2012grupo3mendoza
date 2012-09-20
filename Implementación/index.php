@@ -16,7 +16,10 @@ try{
 	require_once APP_PATH . 'Datasource.php';
 	require_once APP_PATH . 'Session.php';
 	
-	Session::init();
+	
+	
+	Session::getInstancia();
+	
 	Bootstrap::run(new Request());
 	
 }

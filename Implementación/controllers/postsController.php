@@ -35,6 +35,8 @@ class postsController extends Controller{
 			$this->_post->_permisos->contenido = $_POST['contenido'];
 			$this->_post->_permisos->permiso =  $_POST['permisos'];
 			//$this->_post->guardar($this->_post);
+			//$this->_view->mensaje = 'Se guardó correctamente el post con los permisos';
+			//$this->_view->renderizar('exito','post');
 		}
 		$this->_view->titulo = "Nuevo POST";
 		$this->_view->renderizar('nuevo','post');
